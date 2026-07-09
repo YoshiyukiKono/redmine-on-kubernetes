@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redmine
+  namespace: redmine-on-kubernetes
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redmine
+  template:
+    metadata:
+      labels:
+        app: redmine
+    spec:
+      containers:
+        - name: redmine
+          image: redmine:6
+          ports:
+            - name: http
+              containerPort: 3000
+          env:
+            - name: REDMINE_DB_POSTGRES
+              value: postgres
+            - name: REDMINE_DB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: redmine-db-secret
+                  key: POSTGRES_DB
+            - name: REDMINE_DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: redmine-db-secret
+                  key: POSTGRES_USER
+            - name: REDMINE_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: redmine-db-secret
+                  key: POSTGRES_PASSWORD
+          volumeMounts:
+            - name: redmine-files
+              mountPath: /usr/src/redmine/files
+      volumes:
+        - name: redmine-files
+          persistentVolumeClaim:
+            claimName: redmine-files
