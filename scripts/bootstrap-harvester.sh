@@ -15,10 +15,11 @@ set -Eeuo pipefail
 # Check available names with:
 #   kubectl config get-contexts
 EXPECTED_CONTEXT="REPLACE_WITH_YOUR_KUBERNETES_CONTEXT"
+# EXPECTED_CONTEXT="default"
 
 # StorageClass used for PostgreSQL and Redmine persistent data.
-# Typical Harvester/RKE2/K3s environments may use "longhorn".
-STORAGE_CLASS="longhorn"
+# Typical Harvester/RKE2/K3s environments may use "local-path".
+STORAGE_CLASS="local-path"
 
 # IngressClass installed in the workload cluster.
 # Examples: traefik, nginx
